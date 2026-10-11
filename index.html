@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>A escote</title>
+<meta name="theme-color" content="#1d6b57">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231d6b57'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%82%AC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f4ef;--card:#fff;--fg:#1c2420;--muted:#5d6a63;--line:#dfe3dc;--accent:#1d6b57;--accent-fg:#fff;--soft:#e3efe9;--pos:#1f7a4a;--neg:#b23a32;--warn-bg:#fbf1dc;--warn-fg:#6e4b0c;--shade:rgba(10,20,15,.5);--display:"Bricolage Grotesque",system-ui,sans-serif;--body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#111613;--card:#19201c;--fg:#e6ece8;--muted:#9aa8a0;--line:#2b3530;--accent:#5fc3a3;--accent-fg:#0d1a15;--soft:#1f3029;--pos:#6fd39a;--neg:#f08a80;--warn-bg:#33290f;--warn-fg:#f0cd82;--shade:rgba(0,0,0,.65);color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--body);-webkit-text-size-adjust:100%}
+.wrap{max-width:640px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:6px 18px}
+.logo{font:700 24px/1 var(--display);letter-spacing:-.02em}
+.logo span{color:var(--accent)}
+input,select{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-height:46px}
+select:disabled{opacity:1;background:var(--soft)}
+header select{width:auto;padding:6px 8px;min-height:38px;font-size:14px}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button{font:600 15px/1.2 var(--body);border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:11px 14px;min-height:46px;cursor:pointer}
+button.pri{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+button.danger{color:var(--neg)}
+button.sm{min-height:36px;padding:6px 11px;font-size:13px;flex:none}
+button.icon{min-height:40px;min-width:40px;padding:4px;border:none;background:transparent;font-size:17px;flex:none}
+button:disabled{opacity:.6}
+h1{font:700 27px/1.15 var(--display);margin:0;letter-spacing:-.015em;text-wrap:balance;overflow-wrap:anywhere}
+h2{font:600 12px/1 var(--body);text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:30px 0 10px}
+.sub{color:var(--muted);font-size:14px;margin:4px 0 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.stat{background:var(--soft);border-radius:12px;padding:12px 14px;min-width:0}
+.stat b{display:block;font:700 22px/1.25 var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.stat small{color:var(--muted);font-size:13px}
+.list{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:none}
+.grow{flex:1;min-width:0}
+.t{overflow-wrap:anywhere}
+.m{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.pos{color:var(--pos)}.neg{color:var(--neg)}
+.cat{font-size:22px;width:30px;text-align:center;flex:none}
+.settle{background:var(--warn-bg);color:var(--warn-fg)}
+.settle button{color:var(--warn-fg);border-color:currentColor;background:transparent}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.actions>button{flex:1 1 150px}
+.empty{color:var(--muted);padding:18px 14px;text-align:center}
+.tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:var(--soft);color:var(--accent);padding:2px 6px;border-radius:6px;margin-left:6px;vertical-align:1px}
+.clickable{cursor:pointer}
+.clickable:active{background:var(--soft)}
+.sheet{position:fixed;inset:0;background:var(--shade);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+.sheet>.card{width:100%;max-width:640px;max-height:94vh;overflow:auto;border-radius:18px 18px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));border:none}
+@media(min-width:700px){.sheet{align-items:center}.sheet>.card{border-radius:18px}}
+label{display:block;font-size:14px;font-weight:500;margin:14px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:38px;font-weight:500;font-size:14px;margin:0;cursor:pointer}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip.on{background:var(--soft);border-color:var(--accent);color:var(--accent)}
+.check{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);margin:0;font-weight:400;cursor:pointer}
+.check:first-child{border-top:none}
+.check input{width:22px;height:22px;min-height:0;margin:0;accent-color:var(--accent);flex:none}
+.err{color:var(--neg);font-size:14px;margin-top:10px;min-height:1px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two label{margin-top:14px}
+details summary{cursor:pointer;color:var(--muted);font-weight:500;padding:4px 0}
+details .row{padding:9px 0}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:500;z-index:20;max-width:90vw;text-align:center}
+.link{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.inline{display:flex;gap:8px;margin-top:10px}
+.inline button{flex:none}
+@media (prefers-reduced-motion:no-preference){.sheet>.card{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const I = {
+es:{accounts:"Cuentas",new_account:"Nueva cuenta",name:"Nombre",currency:"Moneda",ph_account:"Viaje a Asturias",people:"personas",no_accounts:"Crea tu primera cuenta arriba.",login_title:"Página principal",pass:"Contraseña",enter:"Entrar",logout:"Salir",loading:"Cargando…",back:"Cuentas",hello:"Hola",you:"tú",total:"Gasto total",your_balance:"Tu saldo",movs_count:"Movimientos",no_people:"Añade personas abajo para poder apuntar gastos.",balances:"Saldos",settle_up:"Para quedar en paz",all_settled:"Todo en paz",settle:"Saldar",add_expense:"Añadir gasto",add_payment:"Añadir pago",edit_expense:"Editar gasto",edit_payment:"Editar pago",movements:"Movimientos",no_movs:"Aún no hay movimientos. Añade el primer gasto.",payment:"Pago",expense:"Gasto",paid_by:"Pagó",everyone:"todos",export:"Exportar CSV",people_links:"Personas y enlaces",no_people_yet:"Todavía no hay nadie en esta cuenta.",add_person:"Añadir",send_link:"Enviar enlace",copied:"Enlace copiado",remove:"Quitar",settings:"Ajustes de la cuenta",save:"Guardar",del_account:"Borrar cuenta",history:"Historial",changes:"cambios",concept:"Concepto",ph_concept:"Cena, gasolina, compra…",amount:"Importe",date:"Fecha",category:"Categoría",payer:"Pagado por",from:"Paga",to:"A",split_between:"Se reparte entre",each:"cada uno",cancel:"Cancelar",delete:"Borrar",saved:"Guardado",deleted:"Borrado",confirm_del:"¿Borrar este movimiento?",confirm_del_acc:"¿Borrar la cuenta «{n}» con todos sus gastos? No se puede deshacer.",confirm_del_p:"¿Quitar a {n} de la cuenta? Su enlace dejará de funcionar.",invalid_link:"Este enlace no es válido o la cuenta ya no existe.",wrong_pass:"Contraseña incorrecta.",between_to:"Entre / a",type:"Tipo",balance:"Saldo",edit:"Editar",link_of:"Tu enlace para la cuenta «{c}»",
+h_add:"añadió",h_edit:"editó",h_del:"borró",h_acc_new:"creó la cuenta",h_acc_edit:"cambió la cuenta",h_p_add:"añadió a",h_p_del:"quitó a",
+cat_comida:"Comida",cat_super:"Compra",cat_bebida:"Bebida",cat_transporte:"Transporte",cat_gasolina:"Gasolina",cat_alojamiento:"Alojamiento",cat_ocio:"Ocio",cat_otros:"Otros",
+err_importe:"Escribe un importe mayor que cero.",err_entre:"Marca al menos una persona.",err_permiso:"Solo puedes cambiar tus propios movimientos.",err_enuso:"No se puede quitar: tiene movimientos en la cuenta.",err_pagador:"Elige quién paga.",err_para:"Elige a quién se paga (otra persona).",err_nombre:"Escribe un nombre.",err_net:"No hay conexión con el servidor. Inténtalo de nuevo.",err_pass:"Contraseña incorrecta.",err_token:"Este enlace no es válido.",err_cuenta:"Esa cuenta ya no existe."},
+de:{accounts:"Abrechnungen",new_account:"Neue Abrechnung",name:"Name",currency:"Währung",ph_account:"Urlaub in Asturien",people:"Personen",no_accounts:"Lege oben deine erste Abrechnung an.",login_title:"Hauptseite",pass:"Passwort",enter:"Anmelden",logout:"Abmelden",loading:"Wird geladen…",back:"Abrechnungen",hello:"Hallo",you:"du",total:"Gesamtausgaben",your_balance:"Dein Saldo",movs_count:"Buchungen",no_people:"Füge unten Personen hinzu, um Ausgaben einzutragen.",balances:"Salden",settle_up:"Zum Ausgleichen",all_settled:"Alles ausgeglichen",settle:"Begleichen",add_expense:"Ausgabe hinzufügen",add_payment:"Zahlung hinzufügen",edit_expense:"Ausgabe bearbeiten",edit_payment:"Zahlung bearbeiten",movements:"Buchungen",no_movs:"Noch keine Buchungen. Trag die erste Ausgabe ein.",payment:"Zahlung",expense:"Ausgabe",paid_by:"Bezahlt von",everyone:"alle",export:"Als CSV exportieren",people_links:"Personen und Links",no_people_yet:"Noch niemand in dieser Abrechnung.",add_person:"Hinzufügen",send_link:"Link senden",copied:"Link kopiert",remove:"Entfernen",settings:"Einstellungen",save:"Speichern",del_account:"Abrechnung löschen",history:"Verlauf",changes:"Änderungen",concept:"Beschreibung",ph_concept:"Abendessen, Tanken, Einkauf…",amount:"Betrag",date:"Datum",category:"Kategorie",payer:"Bezahlt von",from:"Zahlt",to:"An",split_between:"Aufgeteilt auf",each:"je Person",cancel:"Abbrechen",delete:"Löschen",saved:"Gespeichert",deleted:"Gelöscht",confirm_del:"Diese Buchung löschen?",confirm_del_acc:"Abrechnung „{n}“ mit allen Ausgaben löschen? Das lässt sich nicht rückgängig machen.",confirm_del_p:"{n} aus der Abrechnung entfernen? Der Link funktioniert dann nicht mehr.",invalid_link:"Dieser Link ist ungültig oder die Abrechnung existiert nicht mehr.",wrong_pass:"Falsches Passwort.",between_to:"Auf / an",type:"Art",balance:"Saldo",edit:"Bearbeiten",link_of:"Dein Link für „{c}“",
+h_add:"hat hinzugefügt",h_edit:"hat bearbeitet",h_del:"hat gelöscht",h_acc_new:"hat die Abrechnung angelegt",h_acc_edit:"hat die Abrechnung geändert",h_p_add:"hat hinzugefügt",h_p_del:"hat entfernt",
+cat_comida:"Essen",cat_super:"Einkauf",cat_bebida:"Getränke",cat_transporte:"Verkehr",cat_gasolina:"Tanken",cat_alojamiento:"Unterkunft",cat_ocio:"Freizeit",cat_otros:"Sonstiges",
+err_importe:"Gib einen Betrag größer als null ein.",err_entre:"Wähle mindestens eine Person aus.",err_permiso:"Du kannst nur deine eigenen Buchungen ändern.",err_enuso:"Entfernen nicht möglich: Die Person hat Buchungen.",err_pagador:"Wähle, wer zahlt.",err_para:"Wähle, an wen gezahlt wird (eine andere Person).",err_nombre:"Gib einen Namen ein.",err_net:"Keine Verbindung zum Server. Versuch es noch einmal.",err_pass:"Falsches Passwort.",err_token:"Dieser Link ist ungültig.",err_cuenta:"Diese Abrechnung existiert nicht mehr."},
+en:{accounts:"Groups",new_account:"New group",name:"Name",currency:"Currency",ph_account:"Trip to Asturias",people:"people",no_accounts:"Create your first group above.",login_title:"Main page",pass:"Password",enter:"Sign in",logout:"Sign out",loading:"Loading…",back:"Groups",hello:"Hi",you:"you",total:"Total spent",your_balance:"Your balance",movs_count:"Entries",no_people:"Add people below to start logging expenses.",balances:"Balances",settle_up:"To settle up",all_settled:"All settled",settle:"Settle",add_expense:"Add expense",add_payment:"Add payment",edit_expense:"Edit expense",edit_payment:"Edit payment",movements:"Entries",no_movs:"No entries yet. Add the first expense.",payment:"Payment",expense:"Expense",paid_by:"Paid by",everyone:"everyone",export:"Export CSV",people_links:"People and links",no_people_yet:"Nobody in this group yet.",add_person:"Add",send_link:"Send link",copied:"Link copied",remove:"Remove",settings:"Group settings",save:"Save",del_account:"Delete group",history:"History",changes:"changes",concept:"Description",ph_concept:"Dinner, fuel, groceries…",amount:"Amount",date:"Date",category:"Category",payer:"Paid by",from:"From",to:"To",split_between:"Split between",each:"each",cancel:"Cancel",delete:"Delete",saved:"Saved",deleted:"Deleted",confirm_del:"Delete this entry?",confirm_del_acc:"Delete the group “{n}” and all its expenses? This can't be undone.",confirm_del_p:"Remove {n} from the group? Their link will stop working.",invalid_link:"This link isn't valid or the group no longer exists.",wrong_pass:"Wrong password.",between_to:"Between / to",type:"Type",balance:"Balance",edit:"Edit",link_of:"Your link for “{c}”",
+h_add:"added",h_edit:"edited",h_del:"deleted",h_acc_new:"created the group",h_acc_edit:"changed the group",h_p_add:"added",h_p_del:"removed",
+cat_comida:"Food",cat_super:"Groceries",cat_bebida:"Drinks",cat_transporte:"Transport",cat_gasolina:"Fuel",cat_alojamiento:"Lodging",cat_ocio:"Fun",cat_otros:"Other",
+err_importe:"Enter an amount greater than zero.",err_entre:"Tick at least one person.",err_permiso:"You can only change your own entries.",err_enuso:"Can't remove: this person has entries.",err_pagador:"Choose who pays.",err_para:"Choose who receives it (someone else).",err_nombre:"Enter a name.",err_net:"Can't reach the server. Try again.",err_pass:"Wrong password.",err_token:"This link isn't valid.",err_cuenta:"That group no longer exists."}
+};
+const CATS={comida:"🍽️",super:"🛒",bebida:"🍺",transporte:"🚆",gasolina:"⛽",alojamiento:"🏠",ocio:"🎟️",otros:"📦"};
+const MONEDAS=["EUR","CHF","GBP","USD","SEK","NOK","DKK","PLN","CZK","HUF","MAD"];
+
+const store=(o,k,v)=>{try{const s=o==="l"?localStorage:sessionStorage;return v===undefined?s.getItem(k):v===null?s.removeItem(k):s.setItem(k,v)}catch(e){return null}};
+let lang=store("l","lang")||(navigator.language||"es").slice(0,2);if(!I[lang])lang="es";
+const t=(k,v={})=>(I[lang][k]??I.es[k]??k).replace(/\{(\w+)\}/g,(_,x)=>v[x]??"");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const loc=()=>({es:"es-ES",de:"de-DE",en:"en-GB"}[lang]);
+const money=(c,cur)=>{try{return new Intl.NumberFormat(loc(),{style:"currency",currency:cur||"EUR"}).format(c/100)}catch(e){return (c/100).toFixed(2)+" "+cur}};
+const fdate=d=>{try{return new Date(d.slice(0,10)+"T12:00:00").toLocaleDateString(loc(),{day:"numeric",month:"short",year:"numeric"})}catch(e){return d}};
+const hoy=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+const cls=v=>v>0?"pos":v<0?"neg":"";
+const signo=(v,c)=>(v>0?"+":"")+money(v,c.moneda);
+
+const P=new URLSearchParams(location.search);
+const S={token:P.get("t"),pass:store("s","pass"),view:"list",cuenta:null,yo:null,lista:null,form:null,err:"",loading:true};
+let busy=false;
+const $app=document.getElementById("app");
+
+async function api(body){
+  const b=S.token?{...body,token:S.token}:{...body,pass:S.pass};
+  let r;try{r=await fetch("/api",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(b)})}catch(e){throw "net"}
+  let j={};try{j=await r.json()}catch(e){}
+  if(!r.ok)throw j.error||"net";
+  return j;
+}
+const errMsg=e=>I.es["err_"+e]?t("err_"+e):t("err_net");
+const nom=id=>(S.cuenta.personas.find(p=>p.id===id)||{}).nombre||"?";
+
+function partes(m,c){
+  const d={},add=(id,v)=>d[id]=(d[id]||0)+v;
+  add(m.pagador,m.importe);
+  if(m.tipo==="pago"){add(m.para,-m.importe);return d}
+  const orden=c.personas.map(p=>p.id).filter(id=>m.entre.includes(id));
+  const n=orden.length;if(!n)return d;
+  const base=Math.floor(m.importe/n);let resto=m.importe-base*n;
+  orden.forEach(id=>{add(id,-(base+(resto>0?1:0)));if(resto>0)resto--});
+  return d;
+}
+function saldos(c){const s={};c.personas.forEach(p=>s[p.id]=0);c.movs.forEach(m=>{const d=partes(m,c);for(const k in d)s[k]=(s[k]||0)+d[k]});return s}
+function deudas(s){
+  const cr=[],db=[];for(const id in s){if(s[id]>0)cr.push([id,s[id]]);else if(s[id]<0)db.push([id,-s[id]])}
+  cr.sort((a,b)=>b[1]-a[1]);db.sort((a,b)=>b[1]-a[1]);
+  const r=[];let i=0,j=0;
+  while(i<db.length&&j<cr.length){const x=Math.min(db[i][1],cr[j][1]);r.push({de:db[i][0],para:cr[j][0],imp:x});db[i][1]-=x;cr[j][1]-=x;if(!db[i][1])i++;if(!cr[j][1])j++}
+  return r;
+}
+
+function selMon(id,v){return `<select id="${id}">${MONEDAS.map(m=>`<option ${m===v?"selected":""}>${m}</option>`).join("")}</select>`}
+
+function render(){
+  document.documentElement.lang=lang;
+  let h=`<header><div class="logo">A <span>escote</span></div><select id="lang" aria-label="Idioma / Sprache / Language">${[["es","Español"],["de","Deutsch"],["en","English"]].map(([l,n])=>`<option value="${l}" ${l===lang?"selected":""}>${n}</option>`).join("")}</select></header>`;
+  if(S.loading)h+=`<p class="sub">${t("loading")}</p>`;
+  else if(S.token)h+=S.cuenta?vCuenta():`<div class="card">${t("invalid_link")}</div>`;
+  else if(!S.pass)h+=vLogin();
+  else if(S.view==="cuenta"&&S.cuenta)h+=vCuenta();
+  else h+=vLista();
+  if(S.form&&S.cuenta)h+=vForm();
+  $app.innerHTML=h;
+  if(S.form)upd();
+}
+
+function vLogin(){
+  return `<form class="card" id="login"><h1>${t("login_title")}</h1><label for="pw">${t("pass")}</label><input id="pw" type="password" inputmode="numeric" autocomplete="current-password"><div class="err">${esc(S.err)}</div><button class="pri" style="width:100%;margin-top:8px">${t("enter")}</button></form>`;
+}
+
+function vLista(){
+  const l=S.lista||[];
+  return `<h1>${t("accounts")}</h1>
+  <form class="card" id="nueva" style="margin-top:16px"><div class="two"><div><label for="nc-n" style="margin-top:0">${t("name")}</label><input id="nc-n" maxlength="60" placeholder="${t("ph_account")}"></div><div><label for="nc-m" style="margin-top:0">${t("currency")}</label>${selMon("nc-m","EUR")}</div></div><button class="pri" style="width:100%;margin-top:12px">+ ${t("new_account")}</button></form>
+  <h2>${l.length} ${t("accounts").toLowerCase()}</h2>
+  <div class="list">${l.length?l.map(c=>`<div class="row clickable" data-act="abrir" data-id="${c.id}"><div class="grow"><div class="t">${esc(c.nombre)}</div><div class="m">${c.personas} ${t("people")} · ${fdate(c.creada)}</div></div><span class="num">${money(c.total,c.moneda)}</span><span class="m" aria-hidden="true">›</span></div>`).join(""):`<div class="empty">${t("no_accounts")}</div>`}</div>
+  <div class="actions"><button data-act="salir">${t("logout")}</button></div>`;
+}
+
+function vCuenta(){
+  const c=S.cuenta,adm=!S.token,s=saldos(c),tr=deudas(s);
+  const total=c.movs.filter(m=>m.tipo==="gasto").reduce((a,m)=>a+m.importe,0);
+  const puede=m=>adm||m.pagador===S.yo;
+  let h=adm?`<button class="sm" data-act="volver" style="margin-bottom:12px">← ${t("back")}</button>`:"";
+  h+=`<h1>${esc(c.nombre)}</h1><p class="sub">${S.yo?`${t("hello")}, ${esc(nom(S.yo))} · `:""}${c.personas.length} ${t("people")} · ${c.moneda}</p>`;
+  h+=`<div class="stats"><div class="stat"><small>${t("total")}</small><b>${money(total,c.moneda)}</b></div>`+(S.yo?`<div class="stat"><small>${t("your_balance")}</small><b class="${cls(s[S.yo])}">${signo(s[S.yo]||0,c)}</b></div>`:`<div class="stat"><small>${t("movs_count")}</small><b>${c.movs.length}</b></div>`)+`</div>`;
+  if(!c.personas.length)h+=`<div class="card" style="margin-top:16px">${t("no_people")}</div>`;
+  else{
+    h+=`<div class="actions"><button class="pri" data-act="gasto">+ ${t("add_expense")}</button><button data-act="pago">+ ${t("add_payment")}</button></div>`;
+    h+=`<h2>${t("balances")}</h2><div class="list">${c.personas.map(p=>`<div class="row"><div class="grow t">${esc(p.nombre)}${p.id===S.yo?`<span class="tag">${t("you")}</span>`:""}</div><span class="num ${cls(s[p.id])}">${signo(s[p.id]||0,c)}</span></div>`).join("")}</div>`;
+    h+=`<h2>${t("settle_up")}</h2><div class="list">${tr.length?tr.map(x=>`<div class="row settle"><div class="grow t">${esc(nom(x.de))} → ${esc(nom(x.para))}</div><span class="num">${money(x.imp,c.moneda)}</span>${(adm||x.de===S.yo)?`<button class="sm" data-act="saldar" data-de="${x.de}" data-para="${x.para}" data-imp="${x.imp}">${t("settle")}</button>`:""}</div>`).join(""):`<div class="empty">${t("all_settled")}</div>`}</div>`;
+  }
+  const movs=[...c.movs].sort((a,b)=>b.fecha.localeCompare(a.fecha)||(b.creado||"").localeCompare(a.creado||""));
+  h+=`<h2>${t("movements")}</h2><div class="list">${movs.length?movs.map(m=>{
+    const pago=m.tipo==="pago";
+    const tit=pago?`${esc(nom(m.pagador))} → ${esc(nom(m.para))}<span class="tag">${t("payment")}</span>`:esc(m.concepto);
+    const sub=pago?fdate(m.fecha):`${t("paid_by")} ${esc(nom(m.pagador))} · ${m.entre.length===c.personas.length?t("everyone"):m.entre.map(nom).map(esc).join(", ")} · ${fdate(m.fecha)}`;
+    return `<div class="row"><div class="cat" aria-hidden="true">${pago?"💸":(CATS[m.categoria]||CATS.otros)}</div><div class="grow"><div class="t">${tit}</div><div class="m">${sub}</div></div><span class="num">${money(m.importe,c.moneda)}</span>${puede(m)?`<button class="icon" data-act="editar" data-id="${m.id}" aria-label="${t("edit")}">✏️</button>`:""}</div>`;
+  }).join(""):`<div class="empty">${t("no_movs")}</div>`}</div>`;
+  if(c.movs.length)h+=`<div class="actions"><button data-act="csv">⬇ ${t("export")}</button></div>`;
+  if(adm)h+=vAdmin(c);
+  return h;
+}
+
+function vAdmin(c){
+  const base=location.origin+location.pathname;
+  const hist=c.historial||[];
+  return `<h2>${t("people_links")}</h2><div class="list">${c.personas.length?c.personas.map(p=>{const url=base+"?t="+p.token;return `<div class="row"><div class="grow"><div class="t">${esc(p.nombre)}</div><div class="link">${esc(url)}</div></div><button class="sm" data-act="enviar" data-id="${p.id}">${t("send_link")}</button><button class="icon danger" data-act="delpersona" data-id="${p.id}" aria-label="${t("remove")}">✕</button></div>`}).join(""):`<div class="empty">${t("no_people_yet")}</div>`}</div>
+  <form id="addp" class="inline"><input id="np" maxlength="40" placeholder="${t("name")}" aria-label="${t("name")}" autocomplete="off"><button class="pri">+ ${t("add_person")}</button></form>
+  <h2>${t("settings")}</h2><form class="card" id="ajustes"><div class="two"><div><label for="ac-n" style="margin-top:0">${t("name")}</label><input id="ac-n" maxlength="60" value="${esc(c.nombre)}"></div><div><label for="ac-m" style="margin-top:0">${t("currency")}</label>${selMon("ac-m",c.moneda)}</div></div><div class="actions"><button class="pri">${t("save")}</button><button type="button" class="danger" data-act="delcuenta">${t("del_account")}</button></div></form>
+  <h2>${t("history")}</h2><details class="card"><summary>${hist.length} ${t("changes")}</summary>${hist.map(x=>`<div class="row"><div class="grow"><div class="t"><b>${esc(x.quien)}</b> ${esc(t("h_"+x.accion))}: ${esc(x.detalle)}</div><div class="m">${new Date(x.fecha).toLocaleString(loc(),{dateStyle:"medium",timeStyle:"short"})}</div></div></div>`).join("")}</details>`;
+}
+
+function vForm(){
+  const c=S.cuenta,f=S.form,m=f.mov,adm=!S.token,pago=f.tipo==="pago";
+  const opts=sel=>c.personas.map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${esc(p.nombre)}</option>`).join("");
+  const imp=m.importe?(m.importe/100).toFixed(2).replace(".",lang==="en"?".":","):"";
+  const titulo=t(pago?(m.id?"edit_payment":"add_payment"):(m.id?"edit_expense":"add_expense"));
+  let h=`<div class="sheet" data-act="fondo"><form class="card" id="mov" role="dialog" aria-modal="true" aria-label="${titulo}"><h1>${titulo}</h1>`;
+  if(!pago)h+=`<label for="f-c">${t("concept")}</label><input id="f-c" maxlength="80" value="${esc(m.concepto||"")}" placeholder="${t("ph_concept")}" autocomplete="off">`;
+  h+=`<div class="two"><div><label for="f-i">${t("amount")} (${c.moneda})</label><input id="f-i" inputmode="decimal" value="${imp}" placeholder="0${lang==="en"?".":","}00" autocomplete="off"></div><div><label for="f-f">${t("date")}</label><input id="f-f" type="date" value="${m.fecha}"></div></div>`;
+  if(pago){
+    h+=`<div class="two"><div><label for="f-p">${t("from")}</label><select id="f-p" ${adm?"":"disabled"}>${opts(m.pagador)}</select></div><div><label for="f-to">${t("to")}</label><select id="f-to">${opts(m.para)}</select></div></div>`;
+  }else{
+    const cat=m.categoria||"otros";
+    h+=`<label>${t("category")}</label><div class="chips">${Object.keys(CATS).map(k=>`<label class="chip ${k===cat?"on":""}"><input type="radio" name="cat" value="${k}" ${k===cat?"checked":""}>${CATS[k]} ${t("cat_"+k)}</label>`).join("")}</div>
+    <label for="f-p">${t("payer")}</label><select id="f-p" ${adm?"":"disabled"}>${opts(m.pagador)}</select>
+    <label>${t("split_between")} <span id="cada" style="font-weight:400;color:var(--muted)"></span></label><div class="list">${c.personas.map(p=>`<label class="check"><input type="checkbox" name="entre" value="${p.id}" ${m.entre.includes(p.id)?"checked":""}>${esc(p.nombre)}</label>`).join("")}</div>`;
+  }
+  h+=`<div class="err" id="ferr"></div><div class="actions"><button class="pri" id="fsave">${t("save")}</button><button type="button" data-act="cerrar">${t("cancel")}</button>${m.id?`<button type="button" class="danger" data-act="borrarmov">${t("delete")}</button>`:""}</div></form></div>`;
+  return h;
+}
+
+function leerImporte(v){
+  v=String(v||"").replace(/\s|€/g,"");
+  if(v.includes(",")&&v.includes("."))v=v.replace(/\./g,"").replace(",",".");
+  else v=v.replace(",",".");
+  const n=Number(v);return Number.isFinite(n)?Math.round(n*100):NaN;
+}
+function upd(){
+  const el=document.getElementById("cada");if(!el)return;
+  const imp=leerImporte(document.getElementById("f-i").value);
+  const n=document.querySelectorAll('input[name=entre]:checked').length;
+  el.textContent=imp>0&&n?"· "+money(Math.round(imp/n),S.cuenta.moneda)+" "+t("each"):"";
+}
+
+function toast(msg){
+  document.querySelectorAll(".toast").forEach(x=>x.remove());
+  const d=document.createElement("div");d.className="toast";d.setAttribute("role","status");d.textContent=msg;document.body.appendChild(d);
+  setTimeout(()=>d.remove(),2600);
+}
+
+async function hacer(body,after,okMsg){
+  if(busy)return;busy=true;
+  try{
+    const j=await api(body);
+    if(j.cuenta){S.cuenta=j.cuenta;if(j.yo!==undefined&&S.token)S.yo=j.yo}
+    if(after)after(j);
+    render();
+    if(okMsg)toast(okMsg);
+  }catch(e){
+    const f=document.getElementById("ferr");
+    if(f&&S.form)f.textContent=errMsg(e);else toast(errMsg(e));
+    if(e==="pass"){S.pass=null;store("s","pass",null);render()}
+  }
+  busy=false;
+}
+
+async function cargar(){
+  try{
+    if(S.token){const j=await api({accion:"ver"});S.cuenta=j.cuenta;S.yo=j.yo}
+    else if(S.pass){
+      if(S.view==="cuenta"&&S.cuenta){const j=await api({accion:"ver",cuenta:S.cuenta.id});S.cuenta=j.cuenta}
+      else{const j=await api({accion:"lista"});S.lista=j.cuentas}
+    }
+  }catch(e){
+    if(e==="pass"){S.pass=null;store("s","pass",null)}
+    else if(e==="token"){S.cuenta=null}
+    else if(e==="cuenta"){S.view="list";S.cuenta=null;S.loading=false;return cargar()}
+    else toast(t("err_net"));
+  }
+  S.loading=false;render();
+}
+
+function abrirForm(tipo,mov){
+  const c=S.cuenta,ids=c.personas.map(p=>p.id),yo=S.yo||ids[0];
+  const base=tipo==="pago"?{tipo:"pago",fecha:hoy(),pagador:yo,para:ids.find(x=>x!==yo)||yo}:{tipo:"gasto",fecha:hoy(),pagador:yo,entre:[...ids],categoria:"otros"};
+  S.form={tipo,mov:{...base,...mov}};
+  render();
+  const first=document.getElementById(tipo==="pago"?"f-i":"f-c");
+  if(first&&!mov)first.focus();
+}
+
+function csv(){
+  const c=S.cuenta,dec=lang==="en"?".":",",n=v=>(v/100).toFixed(2).replace(".",dec),q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const rows=[[t("date"),t("type"),t("concept"),t("category"),`${t("amount")} (${c.moneda})`,t("payer"),t("between_to"),...c.personas.map(p=>p.nombre)]];
+  [...c.movs].sort((a,b)=>a.fecha.localeCompare(b.fecha)).forEach(m=>{
+    const d=partes(m,c),pago=m.tipo==="pago";
+    rows.push([m.fecha,t(pago?"payment":"expense"),pago?"":m.concepto,pago?"":t("cat_"+m.categoria),n(m.importe),nom(m.pagador),pago?nom(m.para):m.entre.map(nom).join(", "),...c.personas.map(p=>n(d[p.id]||0))]);
+  });
+  const s=saldos(c);
+  rows.push([t("balance"),"","","","","","",...c.personas.map(p=>n(s[p.id]||0))]);
+  const txt="﻿"+rows.map(r=>r.map(q).join(";")).join("\r\n");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"}));
+  a.download="a-escote-"+c.nombre.toLowerCase().replace(/[^a-z0-9áéíóúñü]+/gi,"-").replace(/^-|-$/g,"")+".csv";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+
+async function enviar(p){
+  const url=location.origin+location.pathname+"?t="+p.token;
+  const texto=`${p.nombre}: `+t("link_of",{c:S.cuenta.nombre});
+  if(navigator.share){try{await navigator.share({title:"A escote",text:texto,url});return}catch(e){if(e&&e.name==="AbortError")return}}
+  try{await navigator.clipboard.writeText(url);toast(t("copied"))}catch(e){window.prompt(t("send_link"),url)}
+}
+
+document.addEventListener("click",async e=>{
+  const el=e.target.closest("[data-act]");if(!el)return;
+  const a=el.dataset.act,c=S.cuenta;
+  if(a==="fondo"){if(e.target===el){S.form=null;render()}return}
+  if(a==="cerrar"){S.form=null;render();return}
+  if(a==="abrir"){S.loading=true;render();try{const j=await api({accion:"ver",cuenta:el.dataset.id});S.cuenta=j.cuenta;S.view="cuenta"}catch(err){toast(errMsg(err))}S.loading=false;render();scrollTo(0,0);return}
+  if(a==="volver"){S.view="list";S.cuenta=null;S.loading=true;render();cargar();return}
+  if(a==="salir"){S.pass=null;store("s","pass",null);S.lista=null;render();return}
+  if(a==="gasto")return abrirForm("gasto");
+  if(a==="pago")return abrirForm("pago");
+  if(a==="saldar")return abrirForm("pago",{pagador:el.dataset.de,para:el.dataset.para,importe:+el.dataset.imp});
+  if(a==="editar"){const m=c.movs.find(x=>x.id===el.dataset.id);if(m)abrirForm(m.tipo,JSON.parse(JSON.stringify(m)));return}
+  if(a==="borrarmov"){if(!confirm(t("confirm_del")))return;const id=S.form.mov.id;return hacer({accion:"borrar",cuenta:c.id,id},()=>{S.form=null},t("deleted"))}
+  if(a==="csv")return csv();
+  if(a==="enviar"){const p=c.personas.find(x=>x.id===el.dataset.id);if(p)enviar(p);return}
+  if(a==="delpersona"){const p=c.personas.find(x=>x.id===el.dataset.id);if(p&&confirm(t("confirm_del_p",{n:p.nombre})))hacer({accion:"delPersona",cuenta:c.id,persona:p.id});return}
+  if(a==="delcuenta"){if(!confirm(t("confirm_del_acc",{n:c.nombre})))return;return hacer({accion:"borrarCuenta",cuenta:c.id},()=>{S.view="list";S.cuenta=null;cargar()},t("deleted"))}
+});
+
+document.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const id=e.target.id,v=x=>(document.getElementById(x)||{}).value||"";
+  if(id==="login"){
+    if(busy)return;busy=true;
+    S.pass=v("pw");S.err="";
+    try{const j=await api({accion:"lista"});S.lista=j.cuentas;store("s","pass",S.pass)}
+    catch(err){S.pass=null;S.err=err==="pass"?t("wrong_pass"):t("err_net")}
+    busy=false;render();return;
+  }
+  if(id==="nueva")return hacer({accion:"crear",nombre:v("nc-n"),moneda:v("nc-m")},()=>{S.view="cuenta"});
+  if(id==="addp"){const n=v("np").trim();if(!n)return toast(t("err_nombre"));return hacer({accion:"addPersona",cuenta:S.cuenta.id,nombre:n},()=>setTimeout(()=>{const i=document.getElementById("np");if(i)i.focus()},0))}
+  if(id==="ajustes")return hacer({accion:"editarCuenta",cuenta:S.cuenta.id,nombre:v("ac-n"),moneda:v("ac-m")},null,t("saved"));
+  if(id==="mov"){
+    const f=S.form,ferr=document.getElementById("ferr");
+    const mov={id:f.mov.id||"",tipo:f.tipo,importe:leerImporte(v("f-i")),fecha:v("f-f")||hoy(),pagador:v("f-p")};
+    if(!(mov.importe>0)){ferr.textContent=t("err_importe");return}
+    if(f.tipo==="pago"){mov.para=v("f-to");if(mov.para===mov.pagador){ferr.textContent=t("err_para");return}}
+    else{
+      mov.concepto=v("f-c").trim();
+      mov.categoria=(document.querySelector('input[name=cat]:checked')||{}).value||"otros";
+      mov.entre=[...document.querySelectorAll('input[name=entre]:checked')].map(x=>x.value);
+      if(!mov.entre.length){ferr.textContent=t("err_entre");return}
+    }
+    return hacer({accion:"guardar",cuenta:S.cuenta.id,mov},()=>{S.form=null},t("saved"));
+  }
+});
+
+document.addEventListener("change",e=>{
+  const x=e.target;
+  if(x.id==="lang"){lang=x.value;store("l","lang",lang);render();return}
+  if(x.name==="cat")document.querySelectorAll(".chip").forEach(ch=>ch.classList.toggle("on",ch.querySelector("input").checked));
+  if(x.name==="entre")upd();
+  if(x.id==="f-i"||x.closest&&x.closest("#mov")){const fe=document.getElementById("ferr");if(fe)fe.textContent=""}
+});
+document.addEventListener("input",e=>{if(e.target.id==="f-i"){upd();const fe=document.getElementById("ferr");if(fe)fe.textContent=""}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.form){S.form=null;render()}});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&!S.form&&!busy&&(S.token||S.pass))cargar()});
+
+render();
+if(S.token||S.pass)cargar();else{S.loading=false;render()}
+</script>
+</body>
+</html>
